@@ -19,9 +19,15 @@ Column {
     property bool busy: false
     property bool offlineOnly: false
     property string pricingUrl: ""
-    property color peakColor: "#f87171"
-    property color offPeakColor: "#4ade80"
-    property color driftColor: "#fbbf24"
+    property color peakColor: Theme.error
+    property color offPeakColor: Theme.success
+    property color driftColor: Theme.warning
+
+    readonly property real statusDotSize: Theme.spacingS + Theme.spacingXXS
+    readonly property real inlineDotSize: Theme.spacingS
+    readonly property real progressThickness: Theme.spacingXS + Theme.spacingXXS
+    readonly property real providerRowHeight: Theme.spacingXL + Theme.spacingM + Theme.spacingXXS
+    readonly property real scheduleLabelWidth: Theme.spacingXL * 2 + Theme.spacingL
 
     signal providerRequested(string provider)
     signal refreshRequested()
@@ -112,9 +118,9 @@ Column {
                 spacing: Theme.spacingS
 
                 Rectangle {
-                    width: 10
-                    height: 10
-                    radius: 5
+                    width: root.statusDotSize
+                    height: root.statusDotSize
+                    radius: width / 2
                     color: root.stateColor
                     anchors.verticalCenter: parent.verticalCenter
                 }
@@ -150,14 +156,14 @@ Column {
 
             Rectangle {
                 width: parent.width
-                height: 6
-                radius: 3
+                height: root.progressThickness
+                radius: height / 2
                 color: Theme.withAlpha(Theme.surfaceText, 0.12)
 
                 Rectangle {
                     width: parent.width * (root.peak.progress || 0)
                     height: parent.height
-                    radius: 3
+                    radius: height / 2
                     color: root.stateColor
                 }
             }
@@ -191,7 +197,7 @@ Column {
 
                 delegate: Rectangle {
                     width: parent.width
-                    height: 38
+                    height: root.providerRowHeight
                     radius: Theme.cornerRadiusS
                     color: root.provider === modelData.key
                         ? Theme.withAlpha(Theme.primary, 0.14)
@@ -208,9 +214,9 @@ Column {
                         spacing: Theme.spacingS
 
                         Rectangle {
-                            width: 8
-                            height: 8
-                            radius: 4
+                            width: root.inlineDotSize
+                            height: root.inlineDotSize
+                            radius: width / 2
                             color: root.providerColor(modelData)
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -272,14 +278,14 @@ Column {
                     spacing: Theme.spacingS
 
                     StyledText {
-                        width: 64
+                        width: root.scheduleLabelWidth
                         text: modelData.label
                         font.pixelSize: Theme.fontSizeSmall
                         color: Theme.surfaceVariantText
                     }
 
                     StyledText {
-                        width: parent.width - 64 - parent.spacing
+                        width: parent.width - root.scheduleLabelWidth - parent.spacing
                         text: modelData.value
                         font.pixelSize: Theme.fontSizeSmall
                         color: Theme.surfaceText

@@ -44,8 +44,9 @@ If the field is empty, the `DEEPSEEK_API_KEY` environment variable is used.
 ### Platform session token (monthly usage)
 
 The official API does not expose account-level usage. Monthly tokens, cost,
-token estimate and the daily chart come from the platform's own endpoints and
-need a logged-in session:
+token estimate and the daily chart come from **undocumented internal endpoints**
+under `platform.deepseek.com/api/v0/` and need a pasted browser session
+credential:
 
 1. Open <https://platform.deepseek.com/usage> and sign in.
 2. Press `F12`, open **Network**, and filter for `get_user_summary`.
@@ -56,6 +57,9 @@ need a logged-in session:
 The token is masked in the UI, never logged, and stored only in the gitignored
 `~/.config/dms/plugin_settings.json`. It expires when the platform logs you out;
 the plugin then shows a re-paste warning and stops retrying with the old token.
+Requests include Chrome-like `User-Agent`, `Origin` and `Referer` headers. These
+endpoints are not public, are not covered by DeepSeek's API documentation, and
+can change or break at any time.
 
 ### Currency
 
@@ -68,13 +72,27 @@ contains more than one wallet, a zero-balance wallet is ignored and the last
 positive wallet is kept, so the API's array order cannot flip the bar between
 CNY and USD.
 
+## Network access
+
+- **Official balance:** `https://api.deepseek.com/user/balance` with the API key.
+- **Platform usage:** undocumented `https://platform.deepseek.com/api/v0/...`
+  endpoints (`get_user_summary`, `usage/amount`, `usage/cost`) using the pasted
+  browser session credential and Chrome-like `User-Agent`/`Origin`/`Referer`
+  headers.
+- **Pricing drift:** `api-docs.deepseek.com`, `www.deepseek.com`, `ollama.com`,
+  `docs.ollama.com`, or the custom URL, at most every six hours.
+
+No other network requests are made. **Offline only** disables all of them. The
+platform token, pricing-page checks and their headers are the parts most likely
+to break without notice.
+
 ## Settings
 
 | Setting | Default | Description |
 | --- | --- | --- |
 | Bar display | Peak + balance | Peak + balance, peak only, balance first, or icon only. |
 | Show block progress | on | Thin line under the countdown. |
-| Off-peak / peak / drift color | green / red / amber | Pill and status colors. |
+| Off-peak / peak / drift color | theme success / error / warning | Pill and status colors. |
 | Peak schedule provider | DeepSeek | DeepSeek or Ollama Cloud. |
 | Show Ollama Cloud | on | Show Ollama's schedule in the Providers card. Turning it off switches the active schedule back to DeepSeek. |
 | Check the pricing page | on | Fetches the public pricing page for drift detection. |
@@ -133,6 +151,12 @@ journalctl --user -u dms -f
 
 The schedule and parsing modules are plain JavaScript and are also run under
 Bun for boundary, holiday, DST and fixture tests.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). The short version: keep the plugin
+dependency-free, run `bun test`, test on Dux 2.1.2, and never commit credentials
+or runtime state.
 
 ## Credits
 

@@ -36,9 +36,14 @@ PluginComponent {
         ? customSourceUrl
         : Schedule.sourceUrl(provider)
 
-    readonly property color peakColor: pluginData.peakColor || "#f87171"
-    readonly property color offPeakColor: pluginData.offPeakColor || "#4ade80"
-    readonly property color driftColor: pluginData.driftColor || "#fbbf24"
+    readonly property color peakColor: pluginData.peakColor || Theme.error
+    readonly property color offPeakColor: pluginData.offPeakColor || Theme.success
+    readonly property color driftColor: pluginData.driftColor || Theme.warning
+
+    readonly property real pillDotSize: Theme.spacingS
+    readonly property real gaugeWidth: Theme.spacingXL * 2 + Theme.spacingS
+    readonly property real gaugeThickness: Theme.spacingXXS
+    readonly property real popoutBodyHeight: Math.max(Theme.spacingXL * 12, popoutHeight - Theme.spacingXL * 3)
 
     property double nowMs: Date.now()
     property double lastRefreshRequest: 0
@@ -62,7 +67,7 @@ PluginComponent {
     readonly property string diffText: hasBalance
         ? Format.formatSignedMoney(snapshot.diff || 0, balance.currency)
         : ""
-    readonly property color diffColor: (snapshot.diff || 0) >= 0 ? "#4ade80" : Theme.error
+    readonly property color diffColor: (snapshot.diff || 0) >= 0 ? Theme.success : Theme.error
 
     readonly property string countdownText: Schedule.formatCountdown(peak.secondsToNext)
     readonly property string peakText: displayMode === "full"
@@ -189,19 +194,19 @@ PluginComponent {
             spacing: Theme.spacingS
 
             Rectangle {
-                width: 8
-                height: 8
-                radius: 4
+                width: root.pillDotSize
+                height: root.pillDotSize
+                radius: width / 2
                 color: root.stateColor
                 anchors.verticalCenter: parent.verticalCenter
             }
 
             Column {
                 anchors.verticalCenter: parent.verticalCenter
-                spacing: 1
+                spacing: Theme.spacingXXS
 
                 Row {
-                    spacing: 5
+                    spacing: Theme.spacingXS
 
                     StyledText {
                         visible: root.peakTextVisible
@@ -232,15 +237,15 @@ PluginComponent {
 
                 Rectangle {
                     visible: root.showGauge
-                    width: 56
-                    height: 2
-                    radius: 1
+                    width: root.gaugeWidth
+                    height: root.gaugeThickness
+                    radius: height / 2
                     color: Theme.withAlpha(Theme.surfaceText, 0.14)
 
                     Rectangle {
                         width: parent.width * (root.peak.progress || 0)
                         height: parent.height
-                        radius: 1
+                        radius: height / 2
                         color: root.stateColor
                     }
                 }
@@ -253,9 +258,9 @@ PluginComponent {
             spacing: 2
 
             Rectangle {
-                width: 7
-                height: 7
-                radius: 3.5
+                width: root.pillDotSize
+                height: root.pillDotSize
+                radius: width / 2
                 color: root.stateColor
                 anchors.horizontalCenter: parent.horizontalCenter
             }
@@ -310,7 +315,7 @@ PluginComponent {
                 id: popoutFlickable
 
                 width: parent.width
-                height: 470
+                height: root.popoutBodyHeight
                 contentWidth: width
                 contentHeight: contentColumn.height
                 clip: true

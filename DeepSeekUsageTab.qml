@@ -15,8 +15,15 @@ Column {
     property bool hasApiKey: false
     property bool hasPlatformToken: false
     property bool offlineOnly: false
-    property color chartInputColor: "#89dceb"
-    property color chartOutputColor: "#cba6f7"
+    property color chartInputColor: Theme.primary
+    property color chartOutputColor: Theme.tertiary
+
+    readonly property real sparklineHeight: Theme.spacingXL * 2
+    readonly property real chartHeight: Theme.spacingXL * 6
+    readonly property real legendWidth: Theme.spacingS + Theme.spacingXXS
+    readonly property real legendHeight: Theme.spacingS
+    readonly property real historyMonthWidth: Theme.spacingXL * 3 + Theme.spacingS
+    readonly property real historyValueWidth: Theme.spacingXL * 2 + Theme.spacingM
 
     signal refreshRequested()
     signal settingsRequested()
@@ -62,7 +69,7 @@ Column {
             value: current && current.cost !== null && current.cost !== undefined
                 ? Format.formatMoney(current.cost, root.platformCurrency)
                 : "—",
-            color: "#f9e2af"
+            color: Theme.warning
         },
         {
             label: "Tokens",
@@ -80,7 +87,7 @@ Column {
     function trendColor(trend) {
         if (!trend || !isFinite(trend.value))
             return Theme.surfaceVariantText;
-        return trend.value >= 0 ? "#4ade80" : Theme.error;
+        return trend.value >= 0 ? Theme.success : Theme.error;
     }
 
     // No credentials at all
@@ -262,7 +269,7 @@ Column {
             // Small inline balance sparkline
             Item {
                 width: parent.width
-                height: 44
+                height: root.sparklineHeight
                 visible: root.trends.sparkline && root.trends.sparkline.length > 1
 
                 Canvas {
@@ -456,7 +463,7 @@ Column {
 
             DeepSeekUsageChart {
                 width: parent.width
-                height: 150
+                height: root.chartHeight
                 visible: root.daily.length > 0
                 days: root.daily
                 inputColor: root.chartInputColor
@@ -477,8 +484,8 @@ Column {
                     spacing: Theme.spacingXS
 
                     Rectangle {
-                        width: 10
-                        height: 8
+                        width: root.legendWidth
+                        height: root.legendHeight
                         radius: 1
                         color: root.chartInputColor
                         anchors.verticalCenter: parent.verticalCenter
@@ -495,8 +502,8 @@ Column {
                     spacing: Theme.spacingXS
 
                     Rectangle {
-                        width: 10
-                        height: 8
+                        width: root.legendWidth
+                        height: root.legendHeight
                         radius: 1
                         color: root.chartOutputColor
                         anchors.verticalCenter: parent.verticalCenter
@@ -540,27 +547,27 @@ Column {
                 spacing: Theme.spacingS
 
                 StyledText {
-                    width: 82
+                    width: root.historyMonthWidth
                     text: "Month"
                     font.pixelSize: Theme.fontSizeXSmall
                     color: Theme.surfaceVariantText
                 }
                 StyledText {
-                    width: 62
+                    width: root.historyValueWidth
                     text: "Input"
                     font.pixelSize: Theme.fontSizeXSmall
                     color: Theme.surfaceVariantText
                     horizontalAlignment: Text.AlignRight
                 }
                 StyledText {
-                    width: 62
+                    width: root.historyValueWidth
                     text: "Output"
                     font.pixelSize: Theme.fontSizeXSmall
                     color: Theme.surfaceVariantText
                     horizontalAlignment: Text.AlignRight
                 }
                 StyledText {
-                    width: parent.width - 82 - 62 - 62 - parent.spacing * 3
+                    width: parent.width - root.historyMonthWidth - root.historyValueWidth * 2 - parent.spacing * 3
                     text: "Cost"
                     font.pixelSize: Theme.fontSizeXSmall
                     color: Theme.surfaceVariantText
@@ -576,7 +583,7 @@ Column {
                     spacing: Theme.spacingS
 
                     StyledText {
-                        width: 82
+                        width: root.historyMonthWidth
                         text: Format.monthLabel(modelData.year, modelData.month)
                             + (modelData.current ? " · now" : "")
                         font.pixelSize: Theme.fontSizeSmall
@@ -584,21 +591,21 @@ Column {
                         elide: Text.ElideRight
                     }
                     StyledText {
-                        width: 62
+                        width: root.historyValueWidth
                         text: Format.formatTokens(modelData.input)
                         font.pixelSize: Theme.fontSizeSmall
                         color: Theme.surfaceText
                         horizontalAlignment: Text.AlignRight
                     }
                     StyledText {
-                        width: 62
+                        width: root.historyValueWidth
                         text: Format.formatTokens(modelData.output)
                         font.pixelSize: Theme.fontSizeSmall
                         color: Theme.surfaceText
                         horizontalAlignment: Text.AlignRight
                     }
                     StyledText {
-                        width: parent.width - 82 - 62 - 62 - parent.spacing * 3
+                        width: parent.width - root.historyMonthWidth - root.historyValueWidth * 2 - parent.spacing * 3
                         text: modelData.cost !== null && modelData.cost !== undefined
                             ? Format.formatMoney(modelData.cost, root.platformCurrency)
                             : "—"

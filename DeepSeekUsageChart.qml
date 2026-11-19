@@ -6,10 +6,12 @@ Item {
     id: root
 
     property var days: []
-    property color inputColor: "#89dceb"
-    property color outputColor: "#cba6f7"
+    property color inputColor: Theme.primary
+    property color outputColor: Theme.tertiary
     property color textColor: Theme.surfaceVariantText
     property color gridColor: Theme.withAlpha(Theme.surfaceText, 0.08)
+    readonly property string labelFont: Math.round(Theme.fontSizeXSmall) + "px '" + Theme.fontFamily + "'"
+    readonly property string emptyFont: Math.round(Theme.fontSizeSmall) + "px '" + Theme.fontFamily + "'"
 
     onDaysChanged: canvas.requestPaint()
     onWidthChanged: canvas.requestPaint()
@@ -18,6 +20,8 @@ Item {
     onOutputColorChanged: canvas.requestPaint()
     onTextColorChanged: canvas.requestPaint()
     onGridColorChanged: canvas.requestPaint()
+    onLabelFontChanged: canvas.requestPaint()
+    onEmptyFontChanged: canvas.requestPaint()
 
     Canvas {
         id: canvas
@@ -31,16 +35,16 @@ Item {
             var data = root.days || [];
             if (!data.length) {
                 ctx.fillStyle = root.textColor.toString();
-                ctx.font = "10px sans-serif";
+                ctx.font = root.emptyFont;
                 ctx.textAlign = "center";
                 ctx.fillText("No daily data", width / 2, height / 2);
                 return;
             }
 
-            var padLeft = 38;
-            var padRight = 4;
-            var padTop = 6;
-            var padBottom = 16;
+            var padLeft = Theme.spacingXL + Theme.spacingM;
+            var padRight = Theme.spacingXS;
+            var padTop = Theme.spacingXS + Theme.spacingXXS;
+            var padBottom = Theme.spacingL;
             var chartWidth = Math.max(1, width - padLeft - padRight);
             var chartHeight = Math.max(1, height - padTop - padBottom);
 
@@ -61,14 +65,14 @@ Item {
                 ctx.stroke();
 
                 ctx.fillStyle = root.textColor.toString();
-                ctx.font = "9px sans-serif";
+                ctx.font = root.labelFont;
                 ctx.textAlign = "right";
                 ctx.fillText(Format.formatTokens(maxTotal * grid / 4), padLeft - 3, gridY + 3);
             }
 
             var slots = Math.max(data.length, 1);
             var gap = chartWidth / slots;
-            var barWidth = Math.max(2, Math.min(gap * 0.68, 18));
+            var barWidth = Math.max(Theme.spacingXXS, Math.min(gap * 0.68, Theme.spacingL + Theme.spacingXXS));
             var baseY = padTop + chartHeight;
 
             for (var dayIndex = 0; dayIndex < data.length; dayIndex++) {
@@ -88,7 +92,7 @@ Item {
 
                 if (item.day === 1 || item.day % 5 === 0) {
                     ctx.fillStyle = root.textColor.toString();
-                    ctx.font = "9px sans-serif";
+                    ctx.font = root.labelFont;
                     ctx.textAlign = "center";
                     ctx.fillText(String(item.day), centerX, height - 3);
                 }

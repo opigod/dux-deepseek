@@ -56,21 +56,21 @@ PluginSettings {
         settingKey: "offPeakColor"
         label: "Off-peak color"
         description: "Dot and countdown color outside peak hours."
-        defaultValue: "#4ade80"
+        defaultValue: Theme.success
     }
 
     ColorSetting {
         settingKey: "peakColor"
         label: "Peak color"
         description: "Dot and countdown color during peak hours."
-        defaultValue: "#f87171"
+        defaultValue: Theme.error
     }
 
     ColorSetting {
         settingKey: "driftColor"
         label: "Drift color"
         description: "Shown when the published pricing page no longer matches the bundled schedule."
-        defaultValue: "#fbbf24"
+        defaultValue: Theme.warning
     }
 
     StyledText {
