@@ -268,7 +268,9 @@ PluginComponent {
                 } else {
                     if (response.status === 401 || response.status === 403)
                         markAuthExpired();
-                    addError("Platform: " + (response.error || "request failed"));
+                    // A 202/empty/transient platform response is not an auth
+                    // failure. Keep the cached summary and retry on the next
+                    // refresh instead of painting a red request-failed line.
                 }
                 jobFinished();
             });
