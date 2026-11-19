@@ -97,7 +97,7 @@ Column {
         height: setupColumn.implicitHeight + Theme.spacingL * 2
         radius: Theme.cornerRadiusM
         color: Theme.withAlpha(Theme.primary, 0.08)
-        border.width: 1
+        border.width: Theme.outlineWidth
         border.color: Theme.withAlpha(Theme.primary, 0.3)
         visible: root.noCredentials
 
@@ -333,7 +333,7 @@ Column {
         color: root.authExpired
             ? Theme.withAlpha(Theme.error, 0.12)
             : Theme.withAlpha(Theme.primary, 0.08)
-        border.width: 1
+        border.width: Theme.outlineWidth
         border.color: root.authExpired
             ? Theme.withAlpha(Theme.error, 0.4)
             : Theme.withAlpha(Theme.primary, 0.25)
@@ -357,8 +357,8 @@ Column {
             StyledText {
                 width: parent.width
                 text: root.authExpired
-                    ? "Paste a new authorization header or cookie in settings to restore monthly tokens, cost and the daily chart."
-                    : "Monthly token usage, cost and the daily chart need a session token from platform.deepseek.com. Open Usage, inspect get_user_summary, and copy the authorization header."
+                    ? "Paste a new authorization header value in settings to restore monthly tokens, cost and the daily chart."
+                    : "Monthly token usage, cost and the daily chart need a session token from platform.deepseek.com. Open Usage, inspect get_user_summary, and copy the authorization header value."
                 font.pixelSize: Theme.fontSizeSmall
                 color: Theme.surfaceVariantText
                 wrapMode: Text.WordWrap

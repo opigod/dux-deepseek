@@ -50,16 +50,17 @@ credential:
 
 1. Open <https://platform.deepseek.com/usage> and sign in.
 2. Press `F12`, open **Network**, and filter for `get_user_summary`.
-3. Click the request and copy the `authorization` request header (or the full
-   `cookie` header).
+3. Click the request and copy the `authorization` request header value (it
+   starts with `Bearer`).
 4. Paste it into **Platform session token** in the plugin settings.
 
 The token is masked in the UI, never logged, and stored only in plain text in
 `~/.config/dms/plugin_settings.json`. It expires when the platform logs you out;
 the plugin then shows a re-paste warning and stops retrying with the old token.
-Requests include Chrome-like `User-Agent`, `Origin` and `Referer` headers. These
-endpoints are not public, are not covered by DeepSeek's API documentation, and
-can change or break at any time.
+The value is sent as the `Authorization` header. Qt's QML `XMLHttpRequest`
+silently drops `Cookie` and `Referer` headers, so the plugin does not support
+pasting a cookie. These endpoints are not public, are not covered by DeepSeek's
+API documentation, and can change or break at any time.
 
 ### Currency
 
@@ -77,14 +78,14 @@ CNY and USD.
 - **Official balance:** `https://api.deepseek.com/user/balance` with the API key.
 - **Platform usage:** undocumented `https://platform.deepseek.com/api/v0/...`
   endpoints (`get_user_summary`, `usage/amount`, `usage/cost`) using the pasted
-  browser session credential and Chrome-like `User-Agent`/`Origin`/`Referer`
-  headers.
-- **Pricing drift:** `api-docs.deepseek.com`, `www.deepseek.com`, `ollama.com`,
-  `docs.ollama.com`, or the custom URL, at most every six hours.
+  browser session token as the `Authorization` header.
+- **Pricing drift:** `api-docs.deepseek.com` (DeepSeek) or `ollama.com`
+  (Ollama Cloud), or the custom URL, at most every six hours, identified by a
+  `dux-deepseek/1.0` User-Agent.
 
 No other network requests are made. **Offline only** disables all of them. The
-platform token, pricing-page checks and their headers are the parts most likely
-to break without notice.
+platform token and pricing-page checks are the parts most likely to break
+without notice.
 
 ## Settings
 

@@ -39,7 +39,7 @@ Column {
     readonly property color stateColor: driftActive
         ? driftColor
         : (peak && peak.isPeak ? peakColor : offPeakColor)
-    readonly property var holiday: Schedule.holidayRange(nowMs)
+    readonly property var holiday: provider === "deepseek" ? Schedule.holidayRange(nowMs) : null
 
     readonly property var scheduleRows: {
         var rows = [];
@@ -106,7 +106,7 @@ Column {
         height: statusColumn.implicitHeight + Theme.spacingL * 2
         radius: Theme.cornerRadiusM
         color: Theme.surfaceContainerHigh
-        border.width: 1
+        border.width: Theme.outlineWidth
         border.color: Theme.withAlpha(root.stateColor, 0.35)
 
         Column {
@@ -205,7 +205,7 @@ Column {
                     color: root.provider === modelData.key
                         ? Theme.withAlpha(Theme.primary, 0.14)
                         : "transparent"
-                    border.width: 1
+                    border.width: Theme.outlineWidth
                     border.color: root.provider === modelData.key
                         ? Theme.withAlpha(Theme.primary, 0.35)
                         : "transparent"
@@ -318,7 +318,7 @@ Column {
         color: root.driftActive
             ? Theme.withAlpha(root.driftColor, 0.12)
             : Theme.surfaceContainerHigh
-        border.width: root.driftActive ? 1 : 0
+        border.width: root.driftActive ? Theme.outlineWidth : 0
         border.color: Theme.withAlpha(root.driftColor, 0.5)
 
         Column {

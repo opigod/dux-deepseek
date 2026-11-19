@@ -57,7 +57,7 @@ Item {
             }
 
             ctx.strokeStyle = root.gridColor.toString();
-            ctx.lineWidth = 1;
+            ctx.lineWidth = Theme.outlineWidth;
             for (var grid = 0; grid <= 4; grid++) {
                 var gridY = padTop + chartHeight * (1 - grid / 4);
                 ctx.beginPath();

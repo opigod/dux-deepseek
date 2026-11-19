@@ -222,7 +222,7 @@ PluginSettings {
 
         StyledText {
             width: parent.width
-            text: "Optional. Unlocks monthly tokens, cost, token estimate and the daily chart. On platform.deepseek.com open Usage, press F12, open Network, click get_user_summary and copy the authorization request header (or the full Cookie). Masked and stored in plain text in ~/.config/dms/plugin_settings.json."
+            text: "Optional. Unlocks monthly tokens, cost, token estimate and the daily chart. On platform.deepseek.com open Usage, press F12, open Network, click get_user_summary and copy the authorization request header value (it starts with Bearer). Qt cannot send cookies, so use the authorization value, not the cookie. Masked and stored in plain text in ~/.config/dms/plugin_settings.json."
             font.pixelSize: Theme.fontSizeSmall
             color: Theme.surfaceVariantText
             wrapMode: Text.WordWrap
@@ -235,7 +235,7 @@ PluginSettings {
             DTextField {
                 id: platformField
                 width: Math.max(root.keyFieldMinWidth, parent.width - savePlatformButton.width - clearPlatformButton.width - parent.spacing * 2)
-                placeholderText: "Bearer ... or session cookie"
+                placeholderText: "Bearer ..."
                 echoMode: TextInput.Password
                 showPasswordToggle: true
                 onEditingFinished: root.savePlatformToken()
