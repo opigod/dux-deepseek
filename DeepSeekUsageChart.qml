@@ -47,6 +47,7 @@ Item {
             var padBottom = Theme.spacingL;
             var chartWidth = Math.max(1, width - padLeft - padRight);
             var chartHeight = Math.max(1, height - padTop - padBottom);
+            var labelInset = Theme.spacingXS;
 
             var maxTotal = 1;
             for (var i = 0; i < data.length; i++) {
@@ -67,7 +68,7 @@ Item {
                 ctx.fillStyle = root.textColor.toString();
                 ctx.font = root.labelFont;
                 ctx.textAlign = "right";
-                ctx.fillText(Format.formatTokens(maxTotal * grid / 4), padLeft - 3, gridY + 3);
+                ctx.fillText(Format.formatTokens(maxTotal * grid / 4), padLeft - labelInset, gridY + labelInset);
             }
 
             var slots = Math.max(data.length, 1);
@@ -94,7 +95,7 @@ Item {
                     ctx.fillStyle = root.textColor.toString();
                     ctx.font = root.labelFont;
                     ctx.textAlign = "center";
-                    ctx.fillText(String(item.day), centerX, height - 3);
+                    ctx.fillText(String(item.day), centerX, height - labelInset);
                 }
             }
         }

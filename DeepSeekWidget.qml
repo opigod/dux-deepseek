@@ -70,14 +70,12 @@ PluginComponent {
     readonly property color diffColor: (snapshot.diff || 0) >= 0 ? Theme.success : Theme.error
 
     readonly property string countdownText: Schedule.formatCountdown(peak.secondsToNext)
-    readonly property string peakText: displayMode === "full"
-        ? (peak.isPeak ? "PEAK 2x" : "OFF-PEAK") + " · " + countdownText
-        : countdownText
+    readonly property string peakText: countdownText
     readonly property bool peakTextVisible: displayMode !== "icon" && displayMode !== "balance"
     readonly property bool balanceVisible: hasBalance
         && (displayMode === "peakBalance" || displayMode === "balance")
     readonly property bool showGauge: showProgress
-        && (displayMode === "peakBalance" || displayMode === "peak" || displayMode === "full")
+        && (displayMode === "peakBalance" || displayMode === "peak")
     readonly property bool diffShowing: diffVisible && hasBalance
         && Math.abs(snapshot.diff || 0) > 0.000001
     readonly property string balanceLabel: diffShowing ? diffText : balanceText
@@ -255,7 +253,7 @@ PluginComponent {
 
     verticalBarPill: Component {
         Column {
-            spacing: 2
+            spacing: Theme.spacingXXS
 
             Rectangle {
                 width: root.pillDotSize

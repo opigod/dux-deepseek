@@ -61,6 +61,9 @@ Column {
         });
         if (holiday)
             rows.push({ label: "Holiday", value: holiday.text });
+        var holidayWarning = Schedule.holidayDataWarning(nowMs, provider);
+        if (holidayWarning)
+            rows.push({ label: "Holiday data", value: holidayWarning });
         return rows;
     }
 

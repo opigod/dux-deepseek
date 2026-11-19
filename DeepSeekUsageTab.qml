@@ -22,6 +22,7 @@ Column {
     readonly property real chartHeight: Theme.spacingXL * 6
     readonly property real legendWidth: Theme.spacingS + Theme.spacingXXS
     readonly property real legendHeight: Theme.spacingS
+    readonly property real tightSpacing: Math.round(Theme.spacingXXS / 2)
     readonly property real historyMonthWidth: Theme.spacingXL * 3 + Theme.spacingS
     readonly property real historyValueWidth: Theme.spacingXL * 2 + Theme.spacingM
 
@@ -185,7 +186,7 @@ Column {
 
                     delegate: Column {
                         width: (parent.width - parent.spacing * 2) / 3
-                        spacing: 1
+                        spacing: root.tightSpacing
 
                         StyledText {
                             width: parent.width
@@ -231,7 +232,7 @@ Column {
 
                 Column {
                     width: (parent.width - parent.spacing) / 2
-                    spacing: 1
+                    spacing: root.tightSpacing
 
                     StyledText {
                         text: root.trendValue(root.trends.day)
@@ -249,7 +250,7 @@ Column {
 
                 Column {
                     width: (parent.width - parent.spacing) / 2
-                    spacing: 1
+                    spacing: root.tightSpacing
 
                     StyledText {
                         text: root.trendValue(root.trends.month)
@@ -414,7 +415,7 @@ Column {
 
                     delegate: Column {
                         width: (parent.width - parent.spacing * 3) / 4
-                        spacing: 1
+                        spacing: root.tightSpacing
 
                         StyledText {
                             width: parent.width
@@ -486,7 +487,7 @@ Column {
                     Rectangle {
                         width: root.legendWidth
                         height: root.legendHeight
-                        radius: 1
+                        radius: Math.min(Theme.cornerRadiusXXS, height / 2)
                         color: root.chartInputColor
                         anchors.verticalCenter: parent.verticalCenter
                     }
@@ -504,7 +505,7 @@ Column {
                     Rectangle {
                         width: root.legendWidth
                         height: root.legendHeight
-                        radius: 1
+                        radius: Math.min(Theme.cornerRadiusXXS, height / 2)
                         color: root.chartOutputColor
                         anchors.verticalCenter: parent.verticalCenter
                     }

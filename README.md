@@ -112,9 +112,12 @@ Bundled schedule (checked against the public pages in November 2026):
   Off-peak weekends and Chinese public holidays.
 - **Ollama Cloud**: peak **12:00–18:00 UTC, Monday–Friday**. Off-peak weekends.
 
-Chinese holiday dates are bundled for 2025 and 2026. The date list is not a
-substitute for the provider's current policy; a drift warning only tells you the
-published page changed, it does not silently reprice anything.
+Chinese holiday dates are bundled for 2025 and 2026. Dates for 2027 are
+estimated from the lunar calendar and marked provisional in the Peak tab until
+the official arrangement is published; a year with no data treats holidays as
+peak and says so. The date list is not a substitute for the provider's current
+policy; a drift warning only tells you the published page changed, it does not
+silently reprice anything.
 
 ## IPC
 

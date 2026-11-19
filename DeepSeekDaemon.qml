@@ -628,7 +628,7 @@ PluginComponent {
             };
             if (state === "drift" && previous !== "drift") {
                 ToastService.showWarning(
-                    "DeepSeek pricing policy may have changed",
+                    Schedule.providerName(provider) + " pricing policy may have changed",
                     "Peak windows now read " + (found || []).join(", ") + " UTC. Check the pricing page."
                 );
             }

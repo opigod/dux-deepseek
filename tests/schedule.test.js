@@ -37,6 +37,29 @@ describe("DeepSeek peak windows", () => {
         expect(S.isPeakAt(Date.UTC(2026, 9, 1, 2, 0), "deepseek")).toBe(false);
         expect(S.isPeakAt(Date.UTC(2026, 1, 17, 2, 0), "deepseek")).toBe(false);
     });
+
+    it("is off-peak on the 2027 holiday estimate", () => {
+        // Mon 2027-02-08 inside the estimated Spring Festival break.
+        expect(S.isPeakAt(Date.UTC(2027, 1, 8, 2, 0), "deepseek")).toBe(false);
+    });
+});
+
+describe("holiday data coverage", () => {
+    it("warns that 2027 dates are provisional", () => {
+        expect(S.holidayDataWarning(Date.UTC(2027, 1, 8, 2, 0), "deepseek")).toContain("provisional");
+    });
+
+    it("is quiet for published years", () => {
+        expect(S.holidayDataWarning(Date.UTC(2026, 10, 19, 3, 0), "deepseek")).toBe("");
+    });
+
+    it("warns when a year has no holiday data", () => {
+        expect(S.holidayDataWarning(Date.UTC(2028, 0, 5, 2, 0), "deepseek")).toContain("No 2028 holiday data");
+    });
+
+    it("is quiet for providers that bill holidays as peak", () => {
+        expect(S.holidayDataWarning(Date.UTC(2027, 1, 8, 2, 0), "ollama")).toBe("");
+    });
 });
 
 describe("Ollama peak windows", () => {

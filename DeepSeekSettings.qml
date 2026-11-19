@@ -8,6 +8,8 @@ PluginSettings {
     id: root
     pluginId: "deepseek"
 
+    readonly property real keyFieldMinWidth: Theme.spacingXL * 2 + Theme.iconSizeLarge
+
     StyledText {
         width: parent.width
         text: "DeepSeek"
@@ -169,7 +171,7 @@ PluginSettings {
 
             DTextField {
                 id: apiKeyField
-                width: Math.max(80, parent.width - saveKeyButton.width - clearKeyButton.width - parent.spacing * 2)
+                width: Math.max(root.keyFieldMinWidth, parent.width - saveKeyButton.width - clearKeyButton.width - parent.spacing * 2)
                 placeholderText: "sk-..."
                 echoMode: TextInput.Password
                 showPasswordToggle: true
@@ -232,7 +234,7 @@ PluginSettings {
 
             DTextField {
                 id: platformField
-                width: Math.max(80, parent.width - savePlatformButton.width - clearPlatformButton.width - parent.spacing * 2)
+                width: Math.max(root.keyFieldMinWidth, parent.width - savePlatformButton.width - clearPlatformButton.width - parent.spacing * 2)
                 placeholderText: "Bearer ... or session cookie"
                 echoMode: TextInput.Password
                 showPasswordToggle: true
