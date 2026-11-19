@@ -32,9 +32,15 @@ Column {
     readonly property bool hasBalance: balance !== null && balance !== undefined && isFinite(balance.total)
     readonly property bool authExpired: platform !== null && platform.expired === true
     readonly property bool noCredentials: !hasApiKey && !hasPlatformToken
-    readonly property string currency: balance && balance.currency
+    // The official balance and the platform wallet can disagree (for example a
+    // USD API balance with a CNY platform wallet). Never format platform costs
+    // with the balance currency or vice versa.
+    readonly property string balanceCurrency: balance && balance.currency
         ? balance.currency
-        : (summary && summary.currency ? summary.currency : "CNY")
+        : "CNY"
+    readonly property string platformCurrency: platform && platform.currency
+        ? platform.currency
+        : (summary && summary.currency ? summary.currency : balanceCurrency)
     readonly property string monthTitle: current
         ? Format.monthLabel(current.year, current.month)
         : "This month"
@@ -54,7 +60,7 @@ Column {
         {
             label: "Cost",
             value: current && current.cost !== null && current.cost !== undefined
-                ? Format.formatMoney(current.cost, currency)
+                ? Format.formatMoney(current.cost, root.platformCurrency)
                 : "—",
             color: "#f9e2af"
         },
@@ -67,7 +73,7 @@ Column {
 
     function trendValue(trend) {
         return trend && isFinite(trend.value)
-            ? Format.formatSignedMoney(trend.value, root.currency)
+            ? Format.formatSignedMoney(trend.value, root.balanceCurrency)
             : "—";
     }
 
@@ -136,7 +142,7 @@ Column {
             spacing: Theme.spacingS
 
             StyledText {
-                text: root.hasBalance ? Format.formatMoney(root.balance.total, root.currency) : "—"
+                text: root.hasBalance ? Format.formatMoney(root.balance.total, root.balanceCurrency) : "—"
                 font.pixelSize: Theme.fontSizeXXLarge
                 font.weight: Theme.fontWeightMedium
                 color: Theme.primary
@@ -156,11 +162,11 @@ Column {
                     model: [
                         {
                             label: "Topped up",
-                            value: root.hasBalance ? Format.formatMoney(root.balance.toppedUp, root.currency) : "—"
+                            value: root.hasBalance ? Format.formatMoney(root.balance.toppedUp, root.balanceCurrency) : "—"
                         },
                         {
                             label: "Granted",
-                            value: root.hasBalance ? Format.formatMoney(root.balance.granted, root.currency) : "—"
+                            value: root.hasBalance ? Format.formatMoney(root.balance.granted, root.balanceCurrency) : "—"
                         },
                         {
                             label: "Token estimate",
@@ -594,7 +600,7 @@ Column {
                     StyledText {
                         width: parent.width - 82 - 62 - 62 - parent.spacing * 3
                         text: modelData.cost !== null && modelData.cost !== undefined
-                            ? Format.formatMoney(modelData.cost, root.currency)
+                            ? Format.formatMoney(modelData.cost, root.platformCurrency)
                             : "—"
                         font.pixelSize: Theme.fontSizeSmall
                         color: Theme.surfaceText

@@ -11,6 +11,42 @@ const balanceJson = {
     }]
 };
 
+const multiBalanceJson = {
+    is_available: true,
+    balance_infos: [
+        {
+            currency: "USD",
+            total_balance: "10.00",
+            granted_balance: "0.00",
+            topped_up_balance: "10.00"
+        },
+        {
+            currency: "CNY",
+            total_balance: "50.00",
+            granted_balance: "5.00",
+            topped_up_balance: "45.00"
+        }
+    ]
+};
+
+const zeroCnyBalanceJson = {
+    is_available: true,
+    balance_infos: [
+        {
+            currency: "CNY",
+            total_balance: "0.00",
+            granted_balance: "0.00",
+            topped_up_balance: "0.00"
+        },
+        {
+            currency: "USD",
+            total_balance: "6.07",
+            granted_balance: "0.00",
+            topped_up_balance: "6.07"
+        }
+    ]
+};
+
 const summaryJson = {
     code: 0,
     msg: "ok",
@@ -110,6 +146,35 @@ describe("official balance", () => {
 
     it("rejects an unexpected payload", () => {
         expect(P.parseBalance({}).ok).toBe(false);
+    });
+
+    it("selects the wallet matching the platform currency", () => {
+        const usd = P.parseBalance(multiBalanceJson, "USD");
+        expect(usd.currency).toBe("USD");
+        expect(usd.total).toBe(10);
+        expect(usd.infos.length).toBe(2);
+
+        const cny = P.parseBalance(multiBalanceJson, "cny");
+        expect(cny.currency).toBe("CNY");
+        expect(cny.total).toBe(50);
+    });
+
+    it("uses a stable primary wallet without a preference", () => {
+        const parsed = P.parseBalance(multiBalanceJson);
+        expect(parsed.currency).toBe("CNY");
+        expect(parsed.total).toBe(50);
+    });
+
+    it("ignores a stale zero-balance preferred wallet", () => {
+        const parsed = P.parseBalance(zeroCnyBalanceJson, "CNY");
+        expect(parsed.currency).toBe("USD");
+        expect(parsed.total).toBe(6.07);
+    });
+
+    it("keeps a positive preferred wallet", () => {
+        const parsed = P.parseBalance(multiBalanceJson, "USD");
+        expect(parsed.currency).toBe("USD");
+        expect(parsed.total).toBe(10);
     });
 });
 

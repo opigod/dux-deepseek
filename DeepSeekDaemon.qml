@@ -97,6 +97,17 @@ PluginComponent {
         var history = pluginService.loadPluginState(pluginId, "balanceHistory", []);
         balanceHistory = History.clean(Array.isArray(history) ? history : [], Date.now());
 
+        // The platform summary is only a fallback for accounts without an API
+        // key. If a key is configured, never paint the platform wallet first:
+        // that is what made the bar flip from USD to CNY on startup.
+        if (hasBalanceSource && snapshot.balance && snapshot.balance.source === "platform") {
+            snapshot.balance = null;
+            snapshot.trends = { day: null, month: null, sparkline: [] };
+            snapshot.diff = 0;
+            snapshot.diffAt = 0;
+            balanceHistory = [];
+        }
+
         var months = pluginService.loadPluginState(pluginId, "platformHistory", {});
         platformHistory = (months && typeof months === "object" && !Array.isArray(months)) ? months : ({});
 
@@ -213,11 +224,14 @@ PluginComponent {
 
         if (hasBalanceSource && (!balanceAuthInvalid || force)) {
             jobStarted();
+            var preferredBalanceCurrency = snapshot.balance && snapshot.balance.source === "api"
+                ? snapshot.balance.currency
+                : null;
             Http.getJson(Api.balanceUrl(), Api.officialHeaders(apiKey), 15000, function (response) {
                 if (runGeneration !== generation)
                     return;
                 if (response.ok && response.json) {
-                    var parsed = Parse.parseBalance(response.json);
+                    var parsed = Parse.parseBalance(response.json, preferredBalanceCurrency);
                     if (parsed.ok) {
                         results.balance = parsed;
                         balanceAuthInvalid = false;
@@ -398,7 +412,18 @@ PluginComponent {
 
         var newBalance = null;
         if (results.balance) {
-            newBalance = merge(results.balance, { source: "api" });
+            newBalance = merge(results.balance, {
+                available: results.balance.available,
+                source: "api",
+                infos: results.balance.infos || []
+            });
+        } else if (hasBalanceSource) {
+            // Keep the last official balance while the key request is failing.
+            // Do not replace it with the platform wallet, and do not show a
+            // previously cached platform wallet now that a key exists.
+            newBalance = old.balance && old.balance.source !== "platform"
+                ? old.balance
+                : null;
         } else if (results.summary) {
             newBalance = {
                 available: true,
@@ -479,6 +504,9 @@ PluginComponent {
                 auth: true,
                 expired: platformAuthExpired,
                 error: results.authExpired ? "Platform session expired" : "",
+                currency: results.summary
+                    ? results.summary.currency
+                    : (old.platform ? old.platform.currency : null),
                 summary: results.summary || (old.platform ? old.platform.summary : null),
                 current: current,
                 daily: daily || [],
@@ -489,13 +517,11 @@ PluginComponent {
             next.platform = null;
         }
 
-        if (!hasBalanceSource && !hasPlatformSource)
+        if (!hasBalanceSource && !hasPlatformSource && !results.balance && !results.summary)
             newBalance = old.balance;
 
-        if (newBalance && results.summary && newBalance.source === "api") {
+        if (newBalance && results.summary && newBalance.source === "api")
             newBalance.tokenEstimation = results.summary.tokenEstimation;
-            newBalance.monthlyCost = results.summary.monthlyCost;
-        }
 
         next.balance = newBalance;
 
@@ -508,8 +534,23 @@ PluginComponent {
             });
         }
 
+        // Never compare balances across currencies or across the official and
+        // platform sources. That used to produce a fake jump and a stale trend
+        // when the session token and the API key were both configured.
+        var oldCurrency = old.balance ? old.balance.currency : null;
+        var newCurrency = newBalance ? newBalance.currency : null;
+        var oldSource = old.balance ? old.balance.source : null;
+        var newSource = newBalance ? newBalance.source : null;
+        var historyReset = (oldCurrency && newCurrency && oldCurrency !== newCurrency)
+            || (oldSource && newSource && oldSource !== newSource);
+        if (historyReset) {
+            balanceHistory = [];
+            next.diff = 0;
+            next.diffAt = 0;
+        }
+
         var newTotal = newBalance ? newBalance.total : null;
-        var oldTotal = old.balance ? old.balance.total : null;
+        var oldTotal = historyReset ? null : (old.balance ? old.balance.total : null);
         if (newTotal !== null && isFinite(newTotal)) {
             balanceHistory = History.append(balanceHistory, newTotal, now);
             if (oldTotal !== null && isFinite(oldTotal) && Math.abs(newTotal - oldTotal) > 0.000001) {

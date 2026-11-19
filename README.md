@@ -57,6 +57,17 @@ The token is masked in the UI, never logged, and stored only in the gitignored
 `~/.config/dms/plugin_settings.json`. It expires when the platform logs you out;
 the plugin then shows a re-paste warning and stops retrying with the old token.
 
+### Currency
+
+The official balance endpoint is authoritative for the bar balance. Platform
+token and cost figures use the platform wallet currency. When both credentials
+are configured, a failed or transient official request keeps the last official
+balance instead of switching the bar to the platform wallet, and costs are never
+formatted with the balance currency (or the reverse). If the official response
+contains more than one wallet, a zero-balance wallet is ignored and the last
+positive wallet is kept, so the API's array order cannot flip the bar between
+CNY and USD.
+
 ## Settings
 
 | Setting | Default | Description |
