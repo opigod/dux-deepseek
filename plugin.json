@@ -1,0 +1,18 @@
+{
+    "id": "deepseek",
+    "name": "DeepSeek",
+    "description": "Peak/off-peak API pricing countdown plus balance, monthly token usage and cost in one lightweight bar widget",
+    "version": "1.0.0",
+    "author": "opigod",
+    "license": "MIT",
+    "icon": "bolt",
+    "type": "composite",
+    "capabilities": ["dankbar-widget", "daemon", "monitoring"],
+    "components": {
+        "daemon": "./DeepSeekDaemon.qml",
+        "widget": "./DeepSeekWidget.qml"
+    },
+    "settings": "./DeepSeekSettings.qml",
+    "requires_dms": ">=2.1.0",
+    "permissions": ["settings_read", "settings_write", "network"]
+}
