@@ -1,7 +1,7 @@
 {
     "id": "deepseek",
     "name": "DeepSeek",
-    "description": "Peak/off-peak API pricing countdown plus balance, monthly token usage and cost in one lightweight bar widget",
+    "description": "Peak/off-peak pricing countdown and drift checks, official API balance, and platform token usage/cost via a pasted browser credential against undocumented endpoints",
     "version": "1.0.0",
     "author": "opigod",
     "license": "MIT",
