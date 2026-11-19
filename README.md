@@ -57,7 +57,8 @@ credential:
 The token is masked in the UI, never logged, and stored only in plain text in
 `~/.config/dms/plugin_settings.json`. It expires when the platform logs you out;
 the plugin then shows a re-paste warning and stops retrying with the old token.
-The value is sent as the `Authorization` header. Qt's QML `XMLHttpRequest`
+The value is sent as the `Authorization` header. Platform requests send no
+`Cookie`, `Referer`, `Origin`, or `User-Agent`. Qt's QML `XMLHttpRequest`
 silently drops `Cookie` and `Referer` headers, so the plugin does not support
 pasting a cookie. These endpoints are not public, are not covered by DeepSeek's
 API documentation, and can change or break at any time.
