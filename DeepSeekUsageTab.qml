@@ -301,8 +301,9 @@ Column {
                         }
                         var span = Math.max(0.000001, max - min);
                         var step = width / (data.length - 1);
-                        var top = 4;
-                        var bottom = height - 4;
+                        var inset = Theme.spacingXS;
+                        var top = inset;
+                        var bottom = height - inset;
 
                         ctx.beginPath();
                         for (var p = 0; p < data.length; p++) {
@@ -314,7 +315,7 @@ Column {
                                 ctx.lineTo(x, y);
                         }
                         ctx.strokeStyle = lineColor.toString();
-                        ctx.lineWidth = 2;
+                        ctx.lineWidth = Theme.outlineWidthFocused;
                         ctx.lineCap = "round";
                         ctx.lineJoin = "round";
                         ctx.stroke();

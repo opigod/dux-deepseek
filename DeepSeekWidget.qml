@@ -274,8 +274,8 @@ PluginComponent {
         }
     }
 
-    popoutWidth: 400
-    popoutHeight: 560
+    popoutWidth: Theme.spacingXL * 16 + Theme.spacingL
+    popoutHeight: Theme.spacingXL * 22 + Theme.spacingL * 2
 
     popoutContent: Component {
         PopoutComponent {

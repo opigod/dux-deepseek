@@ -54,7 +54,7 @@ credential:
    `cookie` header).
 4. Paste it into **Platform session token** in the plugin settings.
 
-The token is masked in the UI, never logged, and stored only in the gitignored
+The token is masked in the UI, never logged, and stored only in plain text in
 `~/.config/dms/plugin_settings.json`. It expires when the platform logs you out;
 the plugin then shows a re-paste warning and stops retrying with the old token.
 Requests include Chrome-like `User-Agent`, `Origin` and `Referer` headers. These

@@ -159,7 +159,7 @@ PluginSettings {
 
         StyledText {
             width: parent.width
-            text: "Used for the official balance endpoint. Leave empty to use the DEEPSEEK_API_KEY environment variable. Stored in plain text in the gitignored plugin settings."
+            text: "Used for the official balance endpoint. Leave empty to use the DEEPSEEK_API_KEY environment variable. Stored in plain text in ~/.config/dms/plugin_settings.json."
             font.pixelSize: Theme.fontSizeSmall
             color: Theme.surfaceVariantText
             wrapMode: Text.WordWrap
@@ -222,7 +222,7 @@ PluginSettings {
 
         StyledText {
             width: parent.width
-            text: "Optional. Unlocks monthly tokens, cost, token estimate and the daily chart. On platform.deepseek.com open Usage, press F12, open Network, click get_user_summary and copy the authorization request header (or the full Cookie). Masked and stored only in the gitignored plugin settings."
+            text: "Optional. Unlocks monthly tokens, cost, token estimate and the daily chart. On platform.deepseek.com open Usage, press F12, open Network, click get_user_summary and copy the authorization request header (or the full Cookie). Masked and stored in plain text in ~/.config/dms/plugin_settings.json."
             font.pixelSize: Theme.fontSizeSmall
             color: Theme.surfaceVariantText
             wrapMode: Text.WordWrap
